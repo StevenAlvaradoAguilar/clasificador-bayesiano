@@ -1,4 +1,7 @@
-{% extends './layout.html' %} {% block title %} {{data.titulo}} {%endblock%} {%
+<!-- esto indica que extienda de layout que es la que tiene la base inicial, las demas paginas solo modifican el contenido de esa -->
+{% extends './layout.html' %}
+
+{% block title %} {{data.titulo}} {%endblock%} {%
 block body %}
 <div class="container">
   <h1 class="title-grafico">{{data.text}}</h1>
@@ -9,39 +12,56 @@ block body %}
         <span class="leyenda-all">
           <span class="color_cat1"></span>
           <p class="social" id="perc1">
-            Paginas de {{data.categoria1}}: {{data.cantidad1}} ->
+            Clasificados como {{data.categoria1}}: {{data.cantidad1}} ->
             {{data.percent1}}%
           </p>
         </span>
         <span class="leyenda-all">
           <span class="color_cat2"></span>
           <p class="social" id="per2">
-            Paginas de {{data.categoria2}}: {{data.cantidad2}} ->
+            clasificados como {{data.categoria2}}: {{data.cantidad2}} ->
             {{data.percent2}}%
           </p>
         </span>
         <span class="leyenda-all">
           <span class="color_cat3"></span>
-          <p class="social" id="perc3">Otro: {{data.otro}} -> {{data.percent3}}%</p>
+          <p class="social" id="perc3">
+            Otro: {{data.otro}} -> {{data.percent3}}%
+          </p>
         </span>
-        <p class="total">Total: {{data.universo}}</p>
+        <p class="total">Total de urls analizados: {{data.universo}}</p>
       </div>
       <script>
-        const style = document.documentElement.style
+        const style = document.documentElement.style;
 
-        var perc1 = document.getElementsByTagName('p')[0].textContent.split('>')[1].trim().split('%')[0]
-        var perc2 = document.getElementsByTagName('p')[1].textContent.split('>')[1].trim().split('%')[0]
-        var perc3 = document.getElementsByTagName('p')[2].textContent.split('>')[1].trim()
+        let perc1 = document
+          .getElementsByTagName("p")[0]
+          .textContent.split(">")[1]
+          .trim()
+          .split("%")[0];
+        let perc2 = document
+          .getElementsByTagName("p")[1]
+          .textContent.split(">")[1]
+          .trim()
+          .split("%")[0];
+        let perc3 = document
+          .getElementsByTagName("p")[2]
+          .textContent.split(">")[1]
+          .trim();
         window.onload = funcion2 = () => {
-          let num2 = parseFloat(perc1) + parseFloat(perc2)
-          style.setProperty('--per1',perc1+'%');
-          style.setProperty('--per2',num2+'%');
+          let num2 = parseFloat(perc1) + parseFloat(perc2);
+          style.setProperty("--per1", perc1 + "%");
+          style.setProperty("--per2", num2 + "%");
           // console.log(num2);
           // console.log(perc1);
           // console.log(perc3);
         };
       </script>
     </section>
+    <div class="coantainer-buttons">
+      <button class="btn1" onclick="location.href='/categoria/{{data.categoria1}}'">{{data.categoria1}}</button>
+      <button class="btn2" onclick="location.href='/categoria/{{data.categoria2}}'">{{data.categoria2}}</button>
+    </div>
   </div>
 </div>
 

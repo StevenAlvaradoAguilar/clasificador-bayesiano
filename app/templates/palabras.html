@@ -1,0 +1,30 @@
+
+<!-- esto indica que extienda de layout que es la que tiene la base inicial, las demas paginas solo modifican el contenido de esa -->
+{% extends './layout.html' %}
+
+{% block title %} {{data.titulo}} {%endblock%}
+
+{% block body %}
+
+<div class="container">
+    <h1 class="title-grafico">Palabras de {{data.url}}</h1>
+    <table class="table">
+        <tr>
+          <th class="th1">Palabra</th>
+          <th class="th2">Cantidad de apariciones</th>
+          <th class="th3">Categoria</th>
+        </tr>
+    
+        {% for palabra in data.listPalabras %}
+            <tr>
+                 <td class="td-pa 1">{{palabra[0]}}</td>
+                 <td class="td-pa 2">{{palabra[1]}}</td>
+                 <td class="td-pa 3">{{palabra[2]}}</td>
+            </tr>
+        {% endfor %}
+    
+      </table>
+  </div>
+    
+
+{% endblock %}

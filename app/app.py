@@ -13,9 +13,9 @@ def index():
     cat2=bayes.cat2_G
     cant2=bayes.cant2_G
     otro= bayes.otro_G
-    percent1= cant1/universo*100
-    percent2= cant2/universo*100
-    percent3= otro/universo*100
+    percent1= int(cant1/universo*100)
+    percent2= int(cant2/universo*100)
+    percent3= 100-(percent1+percent2)
     data={
         'titulo':'Clasificador Bayesiano',
         'text': 'Results',
@@ -29,17 +29,62 @@ def index():
         'percent2':percent2,
         'percent3':percent3,
     }
+
     return render_template('index.html', data=data)
 
 @app.route('/categoria/<categoria>')
 def categoria(categoria):
 
+    # lista para las urls clasificadas como deportes
+    list1 =['a','e','r','t','y','u']
+
+    # lista para las urls clasificadas como sexual
+    list2 = ['Google.com',
+             'Google.net',
+             'Google.es',
+             'google.les',
+             'Google.us',
+             'GoGGle',
+             'GOOGLE.com',
+             'Gogle.con']
+    listUrls=[]
+    if categoria=='deportes':
+        listUrls = list1
+    else:
+        listUrls= list2
+
     data={
         'titulo':'Categoria',
-        'categoria':categoria
+        'categoria':categoria,
+        'listUrls':listUrls
     }
     return render_template('categoria.html',data=data)
 
+@app.route('/palabras/<categoria>/<url>')
+def palabras(categoria, url):
+    listPalabras=[['Hola', 2, 'deporte'],
+                  ['Hola', 2, 'deporte'],
+                  ['Hola', 2, 'deporte'],
+                  ['Hola', 2, 'deporte'],
+                  ['Hola', 2, 'deporte'],
+                  ['Hola', 2, 'deporte'],
+                  ['Hola', 2, 'deporte'],
+                  ['Hola', 2, 'deporte'],
+                  ['Hola', 2, 'deporte']]
+    data={
+        'titulo':'Palabras',
+        'categoria':categoria,
+        'url':url,
+        'listPalabras':listPalabras
+    }
+    return render_template('palabras.html',data=data)
+
+@app.errorhandler(404)
+def page_not_found(error):
+    data={
+        'titulo':'Not Found',
+    }
+    return render_template("404.html", data=data), 404
 
 
 

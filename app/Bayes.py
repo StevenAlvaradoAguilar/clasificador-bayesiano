@@ -122,6 +122,30 @@ def bayes(cd, cs, universo, url, listaC1, listaC2):
     listaWords = segmentarlista(lis)
     cantD = 0
     cantS = 0
+    for i in listaWords:
+            if i[0] in listaC1:
+                cantD += 1
+            if i[0] in listaC2:
+                cantS +=1
+    print("Palabras de deportes: " + str(cantD))
+    print("Palabras de SEXUAL: " + str(cantS))
+    print("______________________________________________________________________________")
+    probabilidadD = pVd * cantD/cd
+    probabilidadS = pVs * cantS/cs
+    print("Probabilidad de Deportes: "+ str(probabilidadD)+"\n")
+    print("Probabilidad de Sexual: " + str(probabilidadS) + "\n")
+
+"""
+def bayes(cd, cs, universo, url, listaC1, listaC2):
+    #print("_________________________________________________________________________ BAYES ________________________________________________________________\n")
+    pVd = cd / universo
+    pVs = cs / universo
+    webScraping.extraer(url)
+    lista = webScraping.listaPaginas[0]
+    lis = corregirLista(lista)
+    listaWords = segmentarlista(lis)
+    cantD = 0
+    cantS = 0
 
     for i in range (0,len(listaWords) - 1,10):
         try:
@@ -174,10 +198,10 @@ def bayes(cd, cs, universo, url, listaC1, listaC2):
         except:
             print("Se acabo la lista")
             break
-        # print("___________________________________________")
+        #print("___________________________________________")
         var = Pool(3).map(partial(verificarLis,listaC1,listaC2),[palabra1,palabra2, palabra3, palabra4,palabra5,palabra6,palabra7,palabra8,palabra9,palabra10])
         for i in var:
-            # print(i)
+            #print(i)
             if i == 1:
                 cantD += 1
             if i == 2:
@@ -189,6 +213,8 @@ def bayes(cd, cs, universo, url, listaC1, listaC2):
     probabilidadS = pVs * cantS/cs
     print("Probabilidad de Deportes: "+ str(probabilidadD)+"\n")
     print("Probabilidad de Porno: " + str(probabilidadS) + "\n")
+"""
+
 
 def sacarProbabilidadPrevia(url ,categoria1 , categoria2):
     global cat1_G
@@ -231,6 +257,7 @@ def sacarProbabilidadPrevia(url ,categoria1 , categoria2):
                 # funcionespostgres.categorizar(i[0],categoria2)
                 cant2 += 1
         # funcionespostgres.llenarPalabrasCategorizadas(i[0],lD,lS)
+        # print('lista de deportes' + str(l1))
     print(str(universo) + "--"+ str(cant1) + "--"+ str(cant2) +"----------"+ str(otro))
     cant1_G=cant1
     cant2_G=cant2
