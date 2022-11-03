@@ -30,7 +30,6 @@ def index():
         'percent2':percent2,
         'percent3':percent3,
     }
-
     return render_template('index.html', data=data)
 
 @app.route('/categoria/<categoria>')

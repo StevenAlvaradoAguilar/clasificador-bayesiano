@@ -212,7 +212,7 @@ def bayes(cd, cs, universo, url, listaC1, listaC2):
                 cantD += 1
             if i == 2:
                 cantS += 1
-    print("Palabras de deportes: " + str(cantD))
+    print("Palabras de deporets: " + str(cantD))
     print("Palabras de SEXUAL: " + str(cantS))
     print("______________________________________________________________________________")
     probabilidadD = pVd * cantD/cd
