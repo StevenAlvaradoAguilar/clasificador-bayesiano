@@ -10,5 +10,41 @@
 ### La función principal de insertarcategoria es meter las palabras que tengan que ver con una temática en específico en la base de datos, por ejemplo si se quiere realizar una base de datos que tenga palabras relacionadas a deportes el procedimiento es el siguiente:
 ### Buscamos en internet una página web que tenga un listado de palabras relacionadas a la temática en este caso pudimos encontrar un buen referente en el siguiente link https://relatedwords.io/sport esta pagina pide ingresar un tema y devuelve una cantidad bastante considerable de palabras relacionadas. Una vez tenemos ese listado podemos hacer uso de nuestro WebScraping para extraer estas palabras, almacenarlas en una lista y finalmente hacer uso de la función insertar categoría, de esta manera se realizó un repositorio de tablas con palabras relacionadas a una temática para preparar el teorema bayes. 
 ### WebScraping para sacar palabras relacionadas a una temática 
-![Image text]([https://github.com/zzuljs/CppLearning/blob/master/CppLearning/raw/master/Itachi.jpg](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture1.png))
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture1.png)
+### Además se creó el método consultar categoría, este sirve para consultar las palabras clave de una categoría en específica, con el fin de almacenar todas las palabras clave en una estructura de datos de tal manera automatizar el hecho de no estar haciendo múltiples peticiones a la base de datos, con esta lista podemos prepararnos para el teorema bayesiano. 
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture2.png)
+### Creamos otro método llamado consultar no tiene ningún parámetro, debido a que una consulta donde se abre la conexión y el cursor y se ejecuta los datos de la tabla seleccionada y en la cual se va a recorrer los diferentes datos consultados y los mostraremos, luego de todo esto se cerrará tanto el cursor y la conexión. La función principal es corroborar que los elementos si se están insertando en la tabla, como un punto adicional este método podría ser dinámico de manera que podamos insertar una categoría cualquiera y devuelva el mismo resultado, en este caso únicamente consultamos la categoría deportes.
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture3.png)
+### Creamos el método de eliminar el cuál abrimos la conexión y el cursor ejecutamos la función de eliminar todos los datos de la base de datos, hacemos un commit para confirmar la transacción pendiente en la base de datos, esta función tiene como objetivo vaciar la tabla en la base de datos únicamente si se necesitara la reinserción en algun momento, al igual que la anterior este método podría ser genérico para poder ser utilizado con cualquier tabla.
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture4.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
