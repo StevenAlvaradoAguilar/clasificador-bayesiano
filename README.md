@@ -116,6 +116,24 @@ recorre esa lista para corregir errores: Los errores que podemos presentar es qu
 ###          * categoría: Tiene la categoría asignada en la categorización 
 ###          * palabras c1: Tiene las palabras que se obtuvieron de LD con su respectiva frecuencia.
 ###          * palabras c2:  Tiene las palabras que se obtuvieron de LS con su respectiva frecuencia.
+###          * palabras c2:  Tiene las palabras que se obtuvieron de LS con su respectiva frecuencia.
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture18.png)
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture19.png)
+
+###     - Una vez hecho todo el proceso anterior ya podemos llamar al método bayes enviando como parámetros:
+###          * Cant1 : Cantidad de links categorizados como categoría 1
+###          * Cant2 : Cantidad de links categorizados como categoría 2
+###          * Universo: cantidad de links totales
+###          * URL: nuevo objeto para ser categorizado 
+###          * ###          * ListaC1: Lista de palabras clave para la categoría 1 que están en la base de datos    
+###          * ListaC2: Lista de palabras clave para la categoría 1 que están en la base de datos 
+###     El método bayes es el que realiza la función principal de este proyecto aquí vamos a aplicar el segundo nivel de paralelismo, donde al ingresar un nuevo link este debe ser parseado y categorizado con  la fórmula de Bayes según la historia. El procedimiento para realizar el Bayes es el siguiente:
+###          - Se calcula una probabilidad previa(pVd) de la categoría 1 esta es cant1 / universo
+###          - Se calcula una probabilidad previa (pVs) de la categoría 2 esta es cant2 / universo
+###          - Se realiza el webScraping solicitando la función extraer, al ejecutar esta función el resultado se guarda en la lista global en la posición 0 por lo tanto para obtener la lista del URL y las palabras de ese mismo nada más solicitamos el índice cero de la lista global de esta manera ya tenemos el html del nuevo URL, sin embargo si recordamos aún tenemos que corregir y segmentar este resultado para optimizar la búsqueda en las palabras clave, por lo tanto se implementan dos métodos 
+###          * corregir Lista
+###          * Segmentar Lista
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture20.png)
 
 
 
