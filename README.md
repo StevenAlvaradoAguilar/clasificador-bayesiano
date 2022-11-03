@@ -39,7 +39,7 @@
 ###     1- Se obtiene el link enviado desde WebScraping 
 ###     2- Se realiza la petición para obtener la página con requests
 ###     3- Se parsea la con BeautifulSoup para obtener el contenido en formato html 
-###     4- Se establecen las etiquetas de parseo para desechar lo innecesario, en este caso solicitados todos los <p>,<span> y <h1>, adicionalmente podemos solicitar los <strong> que también típicamente tienen texto. 
+###     4- Se establecen las etiquetas de parseo para desechar lo innecesario, en este caso solicitados todos los "p", "span" y "h1", adicionalmente podemos solicitar los "strong" que también típicamente tienen texto. 
 ###     5- Se crea un string con esa información y se agregan a una lista global la cual serán los resultados finales del WebScraping, esta lista guarda sublistas con el url y la sublista de palabras obtenidas del parseo. 
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture10.png)
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture9.png) 
@@ -47,24 +47,24 @@
 ###     En la clase Bayes ocurre todo el procedimiento de preparación para el teorema de bayes, esta clase hace uso de las demás clases para obtener los datos necesarios para el teorema, además acá se realiza el segundo nivel de multiprocesamiento donde al ingresar un nuevo link a la base de datos este tiene que ser parseado y categorizado según la historia, en este caso la historia es el total de información que obtuvimos con el webScraping de los 10.000  links. 
 ## Dependencias 
 ### Primero crear un entorno virtual, Si no se tiene virtualenv hay que correr 
-      > pip install virtualenv
+> pip install virtualenv
 ### luego hay que activar el entorno virtual con 
-      > .\env\Scripts\activate
+> .\env\Scripts\activate
 ### Si sale el (env) al inicio significa que ya estamos en el entorno virtual
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture12.png)
 ### luego en el entorno virtual se instalan las demás dependencias
-###      > pip install flask
-###      > pip install partial
-###      > pip install psycopg2 
-###      > pip install Pool
-###      > pip install time
-###      > pip install bs4 
-###      > pip install requests
-###      > pip install ThreadPoolExecutor
+> pip install flask
+> pip install partial
+> pip install psycopg2 
+> pip install Pool
+> pip install time
+> pip install bs4 
+> pip install requests
+> pip install ThreadPoolExecutor
 ## Ahora para levantar el servidor y correr la aplicación se ejecuta 
-###     > python .\app\app.py
+> python .\app\app.py
 ###     Importante: siempre ejecutar la línea que levanta el servidor en el entorno virtual ya que sino no tendría las dependencias necesarias.
-nota: cuando ocurren errores en el código se cae el servidor entonces tenemos que volver a correr la línea >python .\app\app.py  en el entorno virtual.
+nota: cuando ocurren errores en el código se cae el servidor entonces tenemos que volver a correr la línea > python .\app\app.py  en el entorno virtual.
 ###    Después tenemos que verificar las importaciones necesarias, primero se requiere obtener la lista global que creamos en la clase anterior ya que aqui esta toda la información de los sitios web junto con sus html, por lo tanto necesitamos importar la clase webScraping(import webScraping) además debemos hacer uso de las funciones que nos conectan a la base de datos para obtener la lista de las palabras clave a utilizar en el teorema, por lo tanto necesitaremos importar funciones postgres(import funcionespostgres) finalmente como acá se realiza el segundo nivel de multiprocesamiento requerimos importar otra librería para multiproceso, esta vez Pool (from multiprocessing import Pool).
 ###     Creamos un método llamado cargar, este método se encarga de obtener la lista global de la clase WebScraping y también corrige algunos errores que explicaremos a continuación, esto es el procedimiento del método:
 ###     * Solicita ejecutar el WebScraping de los links 
