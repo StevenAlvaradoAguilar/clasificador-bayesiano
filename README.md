@@ -39,7 +39,7 @@
 ###     1- Se obtiene el link enviado desde WebScraping 
 ###     2- Se realiza la petición para obtener la página con requests
 ###     3- Se parsea la con BeautifulSoup para obtener el contenido en formato html 
-###     4- Se establecen las etiquetas de parseo para desechar lo innecesario, en este caso solicitados todas las etiquetas "p", "span" y "h1", adicionalmente podemos solicitar los "strong" que también típicamente tienen texto. 
+###     4- Se establecen las etiquetas de parseo para desechar lo innecesario, en este caso solicitados todos los <p>,<span> y <h1>, adicionalmente podemos solicitar los <strong> que también típicamente tienen texto. 
 ###     5- Se crea un string con esa información y se agregan a una lista global la cual serán los resultados finales del WebScraping, esta lista guarda sublistas con el url y la sublista de palabras obtenidas del parseo. 
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture10.png)
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture9.png) 
@@ -47,22 +47,22 @@
 ###     En la clase Bayes ocurre todo el procedimiento de preparación para el teorema de bayes, esta clase hace uso de las demás clases para obtener los datos necesarios para el teorema, además acá se realiza el segundo nivel de multiprocesamiento donde al ingresar un nuevo link a la base de datos este tiene que ser parseado y categorizado según la historia, en este caso la historia es el total de información que obtuvimos con el webScraping de los 10.000  links. 
 ## Dependencias 
 ### Primero crear un entorno virtual, Si no se tiene virtualenv hay que correr 
-##      >pip install virtualenv
+##      pip install virtualenv
 ### luego hay que activar el entorno virtual con 
-##      >.\env\Scripts\activate
+##      .\env\Scripts\activate
 ### Si sale el (env) al inicio significa que ya estamos en el entorno virtual
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture12.png)
 ### luego en el entorno virtual se instalan las demás dependencias
-##      >pip install flask
-##      >pip install partial
-##      >pip install psycopg2 
-##      >pip install Pool
-##      >pip install time
-##      >pip install bs4 
-##      >pip install requests
-##      >pip install ThreadPoolExecutor
+##      pip install flask
+##      pip install partial
+##      pip install psycopg2 
+##      pip install Pool
+##      pip install time
+##      pip install bs4 
+##      pip install requests
+##      pip install ThreadPoolExecutor
 ## Ahora para levantar el servidor y correr la aplicación se ejecuta 
-##     >python .\app\app.py
+##     python .\app\app.py
 ###     Importante: siempre ejecutar la línea que levanta el servidor en el entorno virtual ya que sino no tendría las dependencias necesarias.
 nota: cuando ocurren errores en el código se cae el servidor entonces tenemos que volver a correr la línea >python .\app\app.py  en el entorno virtual.
 ###    Después tenemos que verificar las importaciones necesarias, primero se requiere obtener la lista global que creamos en la clase anterior ya que aqui esta toda la información de los sitios web junto con sus html, por lo tanto necesitamos importar la clase webScraping(import webScraping) además debemos hacer uso de las funciones que nos conectan a la base de datos para obtener la lista de las palabras clave a utilizar en el teorema, por lo tanto necesitaremos importar funciones postgres(import funcionespostgres) finalmente como acá se realiza el segundo nivel de multiprocesamiento requerimos importar otra librería para multiproceso, esta vez Pool (from multiprocessing import Pool).
@@ -116,6 +116,24 @@ recorre esa lista para corregir errores: Los errores que podemos presentar es qu
 ###          * categoría: Tiene la categoría asignada en la categorización 
 ###          * palabras c1: Tiene las palabras que se obtuvieron de LD con su respectiva frecuencia.
 ###          * palabras c2:  Tiene las palabras que se obtuvieron de LS con su respectiva frecuencia.
+###          * palabras c2:  Tiene las palabras que se obtuvieron de LS con su respectiva frecuencia.
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture18.png)
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture19.png)
+
+###     - Una vez hecho todo el proceso anterior ya podemos llamar al método bayes enviando como parámetros:
+###          * Cant1 : Cantidad de links categorizados como categoría 1
+###          * Cant2 : Cantidad de links categorizados como categoría 2
+###          * Universo: cantidad de links totales
+###          * URL: nuevo objeto para ser categorizado 
+###          * ###          * ListaC1: Lista de palabras clave para la categoría 1 que están en la base de datos    
+###          * ListaC2: Lista de palabras clave para la categoría 1 que están en la base de datos 
+###     El método bayes es el que realiza la función principal de este proyecto aquí vamos a aplicar el segundo nivel de paralelismo, donde al ingresar un nuevo link este debe ser parseado y categorizado con  la fórmula de Bayes según la historia. El procedimiento para realizar el Bayes es el siguiente:
+###          - Se calcula una probabilidad previa(pVd) de la categoría 1 esta es cant1 / universo
+###          - Se calcula una probabilidad previa (pVs) de la categoría 2 esta es cant2 / universo
+###          - Se realiza el webScraping solicitando la función extraer, al ejecutar esta función el resultado se guarda en la lista global en la posición 0 por lo tanto para obtener la lista del URL y las palabras de ese mismo nada más solicitamos el índice cero de la lista global de esta manera ya tenemos el html del nuevo URL, sin embargo si recordamos aún tenemos que corregir y segmentar este resultado para optimizar la búsqueda en las palabras clave, por lo tanto se implementan dos métodos 
+###          * corregir Lista
+###          * Segmentar Lista
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture20.png)
 
 
 
