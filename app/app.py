@@ -1,5 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import Bayes
+import funcionespostgres
 app=Flask(__name__)
 
 @app.route('/')
@@ -36,17 +37,11 @@ def index():
 def categoria(categoria):
 
     # lista para las urls clasificadas como deportes
-    list1 =['a','e','r','t','y','u']
+    list1 = funcionespostgres.obtenerURLS()[0]
 
     # lista para las urls clasificadas como sexual
-    list2 = ['Google.com',
-             'Google.net',
-             'Google.es',
-             'google.les',
-             'Google.us',
-             'GoGGle',
-             'GOOGLE.com',
-             'Gogle.con']
+    list2 = funcionespostgres.obtenerURLS()[1]
+   
     listUrls=[]
     if categoria=='deportes':
         listUrls = list1
@@ -62,15 +57,8 @@ def categoria(categoria):
 
 @app.route('/palabras/<categoria>/<url>')
 def palabras(categoria, url):
-    listPalabras=[['Hola', 2, 'deporte'],
-                  ['Hola', 2, 'deporte'],
-                  ['Hola', 2, 'deporte'],
-                  ['Hola', 2, 'deporte'],
-                  ['Hola', 2, 'deporte'],
-                  ['Hola', 2, 'deporte'],
-                  ['Hola', 2, 'deporte'],
-                  ['Hola', 2, 'deporte'],
-                  ['Hola', 2, 'deporte']]
+    listPalabras = funcionespostgres.obtenerPalabras(url)
+    
     data={
         'titulo':'Palabras',
         'categoria':categoria,
@@ -87,7 +75,17 @@ def page_not_found(error):
     return render_template("404.html", data=data), 404
 
 
+def query_string():
+    listPalabras = funcionespostgres.obtenerPalabras(request.args.get('url'))
+    data={
+        'titulo':'Palabras',
+        'categoria': request.args.get('categoria'),
+        'url':request.args.get('url'),
+        'listPalabras': listPalabras
+    }
 
+    return render_template('palabras.html',data=data)
 
 if __name__ == '__main__':
+    app.add_url_rule('/query_string', view_func=query_string)
     app.run(debug=True, port = 5000)

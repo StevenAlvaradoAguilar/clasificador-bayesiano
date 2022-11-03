@@ -126,3 +126,48 @@ def llenarPalabrasCategorizadas(url,lista1, lista2):
     conexion.close()
     # print("Se insertaron con exito!!!")
     
+def obtenerURLS():
+    URL1 = []
+    URL2 = []
+    conexion = Conexion.conexion()
+    cur = conexion.cursor()
+    cur.execute("select * from resultados")
+    for objeto in cur.fetchall():
+        if objeto[2] == 'deportes':
+            URL1.append(objeto[0])
+        if objeto[2] == 'sexual':
+            URL2.append(objeto[0])
+    cur.close()
+    conexion.close()
+    return [URL1, URL2]
+
+
+
+def obtenerPalabras(url):
+    lista = []
+    conexion = Conexion.conexion()
+    cur = conexion.cursor()
+    cur.execute("select * from resultados")
+    for objeto in cur.fetchall():
+        if objeto[0]== url:
+            palabra = objeto[3].split(";")
+            palabra.pop(len(palabra)-1)
+            for i in palabra:
+                words = []
+                p = i.split()
+                words.append(p[0])
+                words.append(int(p[1]))
+                words.append('deportes')
+                lista.append(words)
+            palabra = objeto[4].split(";")
+            palabra.pop(len(palabra) - 1)
+            for i in palabra:
+                words = []
+                p = i.split()
+                words.append(p[0])
+                words.append(int(p[1]))
+                words.append('sexual')
+                lista.append(words)
+    cur.close()
+    conexion.close()
+    return lista

@@ -11,7 +11,7 @@
 
     {% for url in data.listUrls %}
         <tr>
-             <td class="td-cat" onclick="location.href='/palabras/{{data.categoria}}/{{url}}'">{{url}}</td>
+             <td class="td-cat" onclick="location.href='/query_string?categoria={{data.categoria}}&url={{url}}'">{{url}}</td>
         </tr>
     {% endfor %}
 

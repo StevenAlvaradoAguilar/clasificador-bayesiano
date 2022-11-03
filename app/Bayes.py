@@ -43,10 +43,16 @@ def cargar():
             funcionespostgres.insertarResultados(objeto[0], words)
             #print("Si agrega")
         except:
-            print(objeto[0],"No agrega")
+            pass
+            # print(objeto[0],"No agrega")
 
-#funcionespostgres.eliminarR()
-#cargar()
+
+#! descomentar estas dos lineas para correr si se cambia la cantidad de urls
+#! mas otras lineas que hay abajo
+#! correr una vez solo la de eliminarR() y despues correr solo cargar()
+
+# funcionespostgres.eliminarR()
+# cargar()
 
 resultados = funcionespostgres.llenarResultador()
 listaPalabras = list()
@@ -247,16 +253,20 @@ def sacarProbabilidadPrevia(url ,categoria1 , categoria2):
                 l2.append(j[0])
                 lS.append(j)
         if(len(l1)== len(l2)):
-            # funcionespostgres.categorizar(i[0],"Otro")
+            #! esta linea es otra que hay que descomentar para correr si se cambia la cantidad de urls
+            funcionespostgres.categorizar(i[0],"Otro")
             otro += 1
         else:
             if(len(l1) > len(l2)):
-                # funcionespostgres.categorizar(i[0],categoria1)
+                #! esta linea es otra que hay que descomentar para correr si se cambia la cantidad de urls
+                funcionespostgres.categorizar(i[0],categoria1)
                 cant1 += 1
             else:
-                # funcionespostgres.categorizar(i[0],categoria2)
+                #! esta linea es otra que hay que descomentar para correr si se cambia la cantidad de urls
+                funcionespostgres.categorizar(i[0],categoria2)
                 cant2 += 1
-        # funcionespostgres.llenarPalabrasCategorizadas(i[0],lD,lS)
+        #! esta es la ultima linea que hay que descomentar para correr si se cambia la cantidad de urls
+        funcionespostgres.llenarPalabrasCategorizadas(i[0],lD,lS)
         # print('lista de deportes' + str(l1))
     print(str(universo) + "--"+ str(cant1) + "--"+ str(cant2) +"----------"+ str(otro))
     cant1_G=cant1
