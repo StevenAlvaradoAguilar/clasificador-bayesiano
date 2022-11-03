@@ -156,40 +156,21 @@ recorre esa lista para corregir errores: Los errores que podemos presentar es qu
 ###          * Si la palabra se encontró en ListaC1 se retorna un 1 
 ###          * Si la palabra se encontró en ListaC1 se retorna un 2
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture23.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+###     - Con la variable que creamos para guardar el resultado de búsqueda hacemos lo siguiente, preguntamos si el retorno de la función en paralelo es 1 o 2, como la función Map devuelve una lista con los resultados de las 10 palabras, debe recorrer la variable resultado para ver quienes son de retorno 1 y quienes del 2. Seguidamente preguntamos dos cosas:
+###          * Si el retorno es 1: Se aumenta la variable cantD +1 
+###          * Si el retorno es 2: Se aumenta la variable cantS +1 
+###     - Teniendo esa información solo nos queda aplicar el Bayes como tal con los datos enviados, la formula seria
+###       probabilidadD = pVd  *   cantD / cant1
+###       probabilidadS = pVs * cantS / cant2
+### Teniendo estas probabilidades podemos ver si el nuevo URL según la fórmula de Bayes es clasificado en la categoría 1 o es clasificado en la categoría 2.
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture24.png)
+### NOTA: Si se descarga el proyecto debemos instalar las dependencias necesarias y cambiar la conexion con sus datos locales, véase la sección de Dependencias.
+### GITHUB: https://github.com/IanVargas1/clasificador-bayesiano/blob/master/README.md
+  
+## Función de Bayes
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture25.png)
+## Se crean las palabras
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture26.png)
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture27.png)
+## Segundo nivel de paralelismo
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture28.png)
