@@ -39,7 +39,7 @@
 ###     1- Se obtiene el link enviado desde WebScraping 
 ###     2- Se realiza la petición para obtener la página con requests
 ###     3- Se parsea la con BeautifulSoup para obtener el contenido en formato html 
-###     4- Se establecen las etiquetas de parseo para desechar lo innecesario, en este caso solicitados todos los "p", "span" y "h1", adicionalmente podemos solicitar los "strong" que también típicamente tienen texto. 
+###     4- Se establecen las etiquetas de parseo para desechar lo innecesario, en este caso solicitados todos los <p>,<span> y <h1>, adicionalmente podemos solicitar los <strong> que también típicamente tienen texto. 
 ###     5- Se crea un string con esa información y se agregan a una lista global la cual serán los resultados finales del WebScraping, esta lista guarda sublistas con el url y la sublista de palabras obtenidas del parseo. 
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture10.png)
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture9.png) 
@@ -47,24 +47,24 @@
 ###     En la clase Bayes ocurre todo el procedimiento de preparación para el teorema de bayes, esta clase hace uso de las demás clases para obtener los datos necesarios para el teorema, además acá se realiza el segundo nivel de multiprocesamiento donde al ingresar un nuevo link a la base de datos este tiene que ser parseado y categorizado según la historia, en este caso la historia es el total de información que obtuvimos con el webScraping de los 10.000  links. 
 ## Dependencias 
 ### Primero crear un entorno virtual, Si no se tiene virtualenv hay que correr 
-> pip install virtualenv
+##      pip install virtualenv
 ### luego hay que activar el entorno virtual con 
-> .\env\Scripts\activate
+##      .\env\Scripts\activate
 ### Si sale el (env) al inicio significa que ya estamos en el entorno virtual
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture12.png)
 ### luego en el entorno virtual se instalan las demás dependencias
-> pip install flask
-> pip install partial
-> pip install psycopg2 
-> pip install Pool
-> pip install time
-> pip install bs4 
-> pip install requests
-> pip install ThreadPoolExecutor
+##      pip install flask
+##      pip install partial
+##      pip install psycopg2 
+##      pip install Pool
+##      pip install time
+##      pip install bs4 
+##      pip install requests
+##      pip install ThreadPoolExecutor
 ## Ahora para levantar el servidor y correr la aplicación se ejecuta 
-> python .\app\app.py
+##     python .\app\app.py
 ###     Importante: siempre ejecutar la línea que levanta el servidor en el entorno virtual ya que sino no tendría las dependencias necesarias.
-nota: cuando ocurren errores en el código se cae el servidor entonces tenemos que volver a correr la línea > python .\app\app.py  en el entorno virtual.
+nota: cuando ocurren errores en el código se cae el servidor entonces tenemos que volver a correr la línea >python .\app\app.py  en el entorno virtual.
 ###    Después tenemos que verificar las importaciones necesarias, primero se requiere obtener la lista global que creamos en la clase anterior ya que aqui esta toda la información de los sitios web junto con sus html, por lo tanto necesitamos importar la clase webScraping(import webScraping) además debemos hacer uso de las funciones que nos conectan a la base de datos para obtener la lista de las palabras clave a utilizar en el teorema, por lo tanto necesitaremos importar funciones postgres(import funcionespostgres) finalmente como acá se realiza el segundo nivel de multiprocesamiento requerimos importar otra librería para multiproceso, esta vez Pool (from multiprocessing import Pool).
 ###     Creamos un método llamado cargar, este método se encarga de obtener la lista global de la clase WebScraping y también corrige algunos errores que explicaremos a continuación, esto es el procedimiento del método:
 ###     * Solicita ejecutar el WebScraping de los links 
@@ -125,7 +125,7 @@ recorre esa lista para corregir errores: Los errores que podemos presentar es qu
 ###          * Cant2 : Cantidad de links categorizados como categoría 2
 ###          * Universo: cantidad de links totales
 ###          * URL: nuevo objeto para ser categorizado 
-###          * ListaC1: Lista de palabras clave para la categoría 1 que están en la base de datos    
+###          * ###          * ListaC1: Lista de palabras clave para la categoría 1 que están en la base de datos    
 ###          * ListaC2: Lista de palabras clave para la categoría 1 que están en la base de datos 
 ###     El método bayes es el que realiza la función principal de este proyecto aquí vamos a aplicar el segundo nivel de paralelismo, donde al ingresar un nuevo link este debe ser parseado y categorizado con  la fórmula de Bayes según la historia. El procedimiento para realizar el Bayes es el siguiente:
 ###          - Se calcula una probabilidad previa(pVd) de la categoría 1 esta es cant1 / universo
@@ -134,6 +134,30 @@ recorre esa lista para corregir errores: Los errores que podemos presentar es qu
 ###          * corregir Lista
 ###          * Segmentar Lista
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture20.png)
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture21.png)
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture22.png)
+###     - Una vez segmentada y corregida la lista de palabras de nuestro nuevo URL la guardamos y generamos dos variables para contar cada palabra encontrada en la base de datos de las palabras clave:
+###          * cantD: Almacena la cantidad de palabras encontradas en la categoría 1
+###          * cantS: Almacena la cantidad de palabras encontradas en la categoría 2
+###     - Aquí vamos a hacer el otro nivel de paralelismo donde vamos a consultar 10 palabras a la vez en las listas de categorías, los pasos para hacer esto son los siguientes:
+###          * Recorremos la lista que guardamos anteriormente pero esta vez utilizamos un recorrido en rango, para esto utilizamos la función range de python, designamos que avancemos en la lista de 10 en 10 para enviar las 10 palabras al método paralelo.
+###          * Guardamos las palabras en variables creadas dentro del for donde:
+###               ** Palabra1 = ListaWords [ i ] 
+###               ** Palabra2 = ListaWords [ i + 1 ] 
+###               ** Palabra3 = ListaWords [ i + 2 ] 
+###               ** Palabra4 = ListaWords [ i + 4 ] 
+###               ** ……..
+###               ** Palabra10 = ListaWords [ i + 9] 
+### Nota: Debemos meter estas asignaciones dentro de un try debido a que si la función intenta asignar una palabra pero ya se terminaron las palabras de la lista está el método no devuelva un error de indexación.
+###          * Creamos una variable para guardar el resultado de la busqueda, aquí realizamos el paralelismo enviando las 10 palabras a consultar de una vez al método verificarLis , mediante el uso de la librería Pool, el método map nos permite enviar subprocesos a una función específica de tal modo que las acciones se hagan a esos objetos al mismo tiempo, este método es más eficiente que los hilos ya que utiliza subprocesos. Lo que se va a hacer acá es lo siguiente:
+###          * llamar al método map donde sus parámetros son, la función a ejecutar y la lista de objetos, en este caso lo que vamos a hacer es preguntar cuáles palabras de las 10 que enviamos están en la lista de palabras clave de categoría 1 y 2, si alguna de estas es hallada en categoría 1 devuelve un 1 y si se encuentra en la 2 devuelve un 2, las que devuelven None no se encuentran en el diccionario de palabras clave.
+###          * Sin embargo necesitamos que la función sepa donde buscar estas palabras clave por lo tanto necesitamos enviar las listas con las palabras clave de categoría 1 y 2, acá debemos tener en consideración la librería partial(from functools import partial) la cual nos permite realizar el llamado de una función de multiproceso de tipo map con múltiples argumentos, los cuales no  son afectados por el proceso sino que se envían solo para comprobar las palabras, en este caso enviamos las dos listas de palabras clave de categoría 1 y 2.
+###     - Solicitamos la función verificarLis dónde se reciben las dos listas con las palabras clave y las 10 palabras para ser buscadas en paralelo en un y otra lista, aquí pasan dos acciones:
+###          * Si la palabra se encontró en ListaC1 se retorna un 1 
+###          * Si la palabra se encontró en ListaC1 se retorna un 2
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/app/img/Picture23.png)
+
+
 
 
 
