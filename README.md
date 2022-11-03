@@ -47,9 +47,9 @@
 ###     En la clase Bayes ocurre todo el procedimiento de preparación para el teorema de bayes, esta clase hace uso de las demás clases para obtener los datos necesarios para el teorema, además acá se realiza el segundo nivel de multiprocesamiento donde al ingresar un nuevo link a la base de datos este tiene que ser parseado y categorizado según la historia, en este caso la historia es el total de información que obtuvimos con el webScraping de los 10.000  links. 
 ## Dependencias 
 ### Primero crear un entorno virtual, Si no se tiene virtualenv hay que correr 
-###      > pip install virtualenv
+      > pip install virtualenv
 ### luego hay que activar el entorno virtual con 
-###      > .\env\Scripts\activate
+      > .\env\Scripts\activate
 ### Si sale el (env) al inicio significa que ya estamos en el entorno virtual
 ![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture12.png)
 ### luego en el entorno virtual se instalan las demás dependencias
