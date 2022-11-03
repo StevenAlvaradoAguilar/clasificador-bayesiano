@@ -34,14 +34,92 @@
 ###     1- Se solicitan los links 
 ###     2- Se crea el ejecutor con la cantidad de hilos deseados 
 ###     3- Se recorre el resultado de la consulta y se obtiene el url para enviarlo a la función extraer. 
-#### Nota: como los hilos se ejecutan en paralelo se requiere un tiempo para que cada hilo haga el procedimiento antes de que no da tiempo a la funcion extraer de realizarse correctamente, para dar este tiempo se hace uso de la librería time(import time) con el método sleep para que cada 2 segundos se ejecute la función que extrae el html de cada link. Además si desea ver cuál hilo está en uso puede importar la librería logging para imprimir que hilo está ejecutando.
+####    Nota: como los hilos se ejecutan en paralelo se requiere un tiempo para que cada hilo haga el procedimiento antes de que no da tiempo a la funcion extraer de realizarse correctamente, para dar este tiempo se hace uso de la librería time(import time) con el método sleep para que cada 2 segundos se ejecute la función que extrae el html de cada link. Además si desea ver cuál hilo está en uso puede importar la librería logging para imprimir que hilo está ejecutando.
 ###     El método extraer es la función más importante en este procedimiento ya que es la que realiza todo el proceso de parseo del html y lo obtiene en un string de palabras con todo el contenido de la página, hacemos uso de BeautifulSoup y requests para consultar el link que se solicite con la función webScraping mencionada anteriormente. El procedimiento es el siguiente:
 ###     1- Se obtiene el link enviado desde WebScraping 
 ###     2- Se realiza la petición para obtener la página con requests
 ###     3- Se parsea la con BeautifulSoup para obtener el contenido en formato html 
 ###     4- Se establecen las etiquetas de parseo para desechar lo innecesario, en este caso solicitados todos los <p>,<span> y <h1>, adicionalmente podemos solicitar los <strong> que también típicamente tienen texto. 
-###    5- Se crea un string con esa información y se agregan a una lista global la cual serán los resultados finales del WebScraping, esta lista guarda sublistas con el url y la sublista de palabras obtenidas del parseo. 
-![Image text]()
+###     5- Se crea un string con esa información y se agregan a una lista global la cual serán los resultados finales del WebScraping, esta lista guarda sublistas con el url y la sublista de palabras obtenidas del parseo. 
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture10.png)
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture9.png) 
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture11.png)
+###     En la clase Bayes ocurre todo el procedimiento de preparación para el teorema de bayes, esta clase hace uso de las demás clases para obtener los datos necesarios para el teorema, además acá se realiza el segundo nivel de multiprocesamiento donde al ingresar un nuevo link a la base de datos este tiene que ser parseado y categorizado según la historia, en este caso la historia es el total de información que obtuvimos con el webScraping de los 10.000  links. 
+## Dependencias 
+### Primero crear un entorno virtual, Si no se tiene virtualenv hay que correr 
+##      pip install virtualenv
+### luego hay que activar el entorno virtual con 
+##      .\env\Scripts\activate
+### Si sale el (env) al inicio significa que ya estamos en el entorno virtual
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture12.png)
+### luego en el entorno virtual se instalan las demás dependencias
+##      pip install flask
+##      pip install partial
+##      pip install psycopg2 
+##      pip install Pool
+##      pip install time
+##      pip install bs4 
+##      pip install requests
+##      pip install ThreadPoolExecutor
+## Ahora para levantar el servidor y correr la aplicación se ejecuta 
+##     python .\app\app.py
+###     Importante: siempre ejecutar la línea que levanta el servidor en el entorno virtual ya que sino no tendría las dependencias necesarias.
+nota: cuando ocurren errores en el código se cae el servidor entonces tenemos que volver a correr la línea >python .\app\app.py  en el entorno virtual.
+###    Después tenemos que verificar las importaciones necesarias, primero se requiere obtener la lista global que creamos en la clase anterior ya que aqui esta toda la información de los sitios web junto con sus html, por lo tanto necesitamos importar la clase webScraping(import webScraping) además debemos hacer uso de las funciones que nos conectan a la base de datos para obtener la lista de las palabras clave a utilizar en el teorema, por lo tanto necesitaremos importar funciones postgres(import funcionespostgres) finalmente como acá se realiza el segundo nivel de multiprocesamiento requerimos importar otra librería para multiproceso, esta vez Pool (from multiprocessing import Pool).
+###     Creamos un método llamado cargar, este método se encarga de obtener la lista global de la clase WebScraping y también corrige algunos errores que explicaremos a continuación, esto es el procedimiento del método:
+###     * Solicita ejecutar el WebScraping de los links 
+###     * Solicita la lista obtenida que se guarda globalmente en la clase 
+recorre esa lista para corregir errores: Los errores que podemos presentar es que al obtener el html completo de una página, tenemos demasiada información que no se utilizará, como algunos símbolos “<” y “>”, “//”, “\\”, “.”, “,”, “:”, “;”, “‘”, “\n” y muchos otros que en este procedimientos son eliminados para mejorar la precisión de las palabras y evitar las solicitudes extras a la base de datos de palabras clave. 
+###     * Se solicita la función de postgres insertar Resultado para meter los links junto con las palabras arregladas en la tabla resultados.
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture13.png)
+###     Una vez ejecutamos el método cagar, no necesitaremos ejecutarlo otra vez ya que la información optimizada ya está en la base de datos por lo cual no necesitamos solicitar un segundo WebScraping. Seguidamente realizamos procedimientos de forma global para guardar la información de la base de datos, los pasos son los siguientes:
+###     * Creamos una variable global para almacenar la lista de resultados, para obtener esta lista hacemos uso del método llenarResultado véase explicado en las funciones  de la clase funcionespostgres este método devuelve una lista con los elementos de la tabla resultados almacenados en la base de datos, después se crea una lista Palabras para segmentar el string de html, que este aunque ya esté optimizado es un string con todas las palabras que necesitan ser separadas para verificarlas una por una, aquí hacemos uso de la funcion split de python para separar el string con cada espacio que encuentre, los pasos son los siguientes:
+###     - Crear una nueva lista global
+###     - Recorrer la lista de resultados
+###     - Realizar el split a la sublista donde esta el string del html de cada url
+###     - Guardar esta segmentación en la lista nueva
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture14.png)
+###     * Seguidamente conocemos ya las url y sus respectivas palabras segmentadas, pero no conocemos la cantidad de repeticiones de cada palabra, por lo cual necesitaremos contar estas palabras de la siguiente manera 
+###     - Se crea una lista definitiva global 
+###     - Se recorre la lista de palabras segmentada, la que creamos anteriormente(listaPalabras)
+###     - Se crea una lista con las frecuencias de cada palabra haciendo uso de la función count de python.
+###     -  Creamos una tupla que contiene la palabra y el número de repeticiones obtenidos de la lista frecuencia, como lista de frecuencia y lista palabras por link tienen el mismo len, podemos hacer uso de la función zip para realizar la tupla correspondiente a cada palabra con su respectiva frecuencia 
+###     - Realizamos un segundo recorrido porque necesitamos quitar las repeticiones de las palabras, ya que sería ilógico que guardaramos la misma tupla varias veces. 
+###          + Ejemplo: En el html se recolectó la palabra “fútbol” y se obtuvo una frecuencia de 2, la tupla generada es la siguiente (‘fútbol’, 2) pero como hay 2 repeticiones solo necesitamos guardar una tupla. 
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture15.png)
+### Creamos un método para imprimir la lista definitiva para verificar que los arreglos se realizan correctamente.
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture16.png)
+![Image text](https://github.com/IanVargas1/clasificador-bayesiano/blob/master/Picture17.png)
+###     Seguidamente explicaremos el método sacarProbabilidadPrevia, este método es el que obtiene la historia de los links totales en la lista definitiva, de esta manera podemos obtener un universo, una cantidad de links para categoría 1 y otra para categoría 2, el procedimiento del método es el siguiente:
+###     - Se guardan las palabras claves en dos listas, una para categoría 1 y otra para la categoría 2, estas variables hacen uso de la funcion consultar categoría de la clase funncionesposgrest 
+###     - Se crea una variable que será el len de la lista definitiva, esta variable nos servirá como universo para aplicar el teorema de bayes. 
+###     - Se crean 3 variables, cant1, cant2, otro 
+###          * cant1: Almacena el total de links en categoría 1 
+###          * cant 2 : Almacena el total de links en categoría 2
+###          * otro: Almacena los links que no se categorizaron en ninguna de las anteriores
+###     - Se recorre la lista definitiva para obtener por cada link la lista de palabras segmentadas, arregladas y contabilizadas. 
+###     - Se crean 4 listas dentro del recorrido:
+###          * LD: es la lista que guardara las palabras clasificadas en la categoría 1 para almacenar en la base de datos resultados
+###          * LS: es la lista que guardara las palabras clasificadas en la categoría 2 para almacenar en la base de datos resultados
+###          * L1: es la lista que guardara las palabras clasificadas en la categoría 1 para ser comparada al final 
+###          * L2: es la lista que guardara las palabras clasificadas en la categoría 2 para ser comparada al final 
+###     - Se pregunta por cada palabra de la lista de palabras de cada link si esta existe en la base de datos de palabra clave para categoría 1 o 2, dependiendo de este resultado la palabra se agrega a las listas, en este caso se agrega de la siguiente manera:
+###          * Si la palabra es encontrada en la categoría 1: Se agrega a LD Y L1, el primer append es para guardar toda la tupla con la frecuencia para usarla en el gráfico final y la segunda para verificar la clasificación comparando la cantidad de palabras en L1 y L2 
+###          * Si la palabra es encontrada en la categoría 2 : Se agrega a LS Y L2, el primer append es para guardar toda la tupla con la frecuencia para usarla en el gráfico final y la segunda para verificar la clasificación comparando la cantidad de palabras en L1 y L2 
+###     - Una vez terminada la clasificación anterior se verifica los largos de L1 y L2 aquí ocurren 3 casos posibles:
+###          * Si L1 y L2 tienen el mismo largo el link no se puede clasificar debido a que tiene la misma cantidad de palabras en las dos categorías y se inserta en la base de datos con categoría otro, 
+###          * Si L1 es mayor a L2 el link se clasifica en la primera categoría debido a que tiene mayor cantidad de palabras de esa categoría  y se inserta en la base de datos con categoría 1.  Además se aumenta el cant1 
+###          * Si L2 es mayor a L1 el link se clasifica en la segunda categoría debido a que tiene mayor cantidad de palabras de esa categoría  y se inserta en la base de datos con categoría 2. Además se aumenta el cant2
+###     - Una vez terminado el proceso, solicitamos la función llenarPalabrasCategorizadas para insertar por cada link las palabras categorizadas que están con todo y frecuencia en las listas LD y LS, se solicita la función de postgres y se insertan según sea el url el cual nos sirve como id, la tabla resultados tiene 5 atributos 
+###          * url : Tiene la dirección web 
+###          * palabras : Tiene el string completo del html de cada sitio
+###          * categoría: Tiene la categoría asignada en la categorización 
+###          * palabras c1: Tiene las palabras que se obtuvieron de LD con su respectiva frecuencia.
+###          * palabras c2:  Tiene las palabras que se obtuvieron de LS con su respectiva frecuencia.
+
+
+
+
 
 
 
